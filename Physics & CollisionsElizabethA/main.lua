@@ -2,7 +2,7 @@
 --Title: Interacting Objects 2
 --Name: Elizabeth A
 --Course: ICS2O/3C
------------------------------------------------------------------------------------------
+------------------------------------------------------------
 
 -- hide the status bar
 display.setStatusBar(display.HiddenStatusBar)
