@@ -56,6 +56,19 @@ beam:toBack()
 --add to physics
 physics.addBody(beam, "static", {friction = 0.6, bounce = 0.4})
 
+--create the second beam
+local beam2 = display.newImage("Images/beam.png", 900, 700)
+
+--set the beam width and height. 
+beam2.width = display.contentWidth/5
+beam2.height = display.contentHeight
+
+--send it to the back layer
+beam2:toBack()
+
+--add to physics
+physics.addBody(beam2, "static", {friction = 0.7, bounce = 0.5})
+
 --create the background
 local background = display.newImage("Images/bkg.png", 0 ,0)
 
@@ -81,7 +94,7 @@ local function firstBall()
 	local ball1 = display.newImage("Images/super_ball.png", 0, 0)
 
 	--add to physics
-	physics.addBody(ball1, {density=0.3, friction=0.6, bounce=0.3, radius= 25})
+	physics.addBody(ball1, {density = 0.3, friction = 0.6, bounce = 0.3, radius = 30})
 end
 
 ------------------------------------------------------------
@@ -90,7 +103,7 @@ local function secondBall()
 	local ball2 = display.newImage("Images/super_ball.png", 0, 0)
 
 	--add to physics
-	physics.addBody(ball2, {density=1.1, friction=0.6, bounce=0.4, radius=12.5})
+	physics.addBody(ball2, {density=1.1, friction=0.6, bounce=0.4, radius = 12.5})
 
 	--scale ball2 to be half of its original size
 	ball2:scale(0.5, 0.5)
@@ -100,7 +113,9 @@ end
 local function thirdBall()
 	-- creating third
 	local ball3 = display.newImage("Images/super_ball.png",0, 0)
-	ball3:scale(3,3)
+	ball3:scale(3, 3)
+	--add to physics
+		physics.addBody(ball3, {density = 1.9, friction = 4.5, bounce = 1.0, radius = 60})
 end
 
 --create the fourth ball
@@ -110,16 +125,18 @@ end
 		ball4:scale(4, 4)
 	
 		--add to physics
-		physics.addBody(ball4, {density=0.2, friction=0.8, bounce=0.7, radius=150})
+		physics.addBody(ball4, {density = 1,0, friction = 0.8, bounce = 2.7, radius = 100})
 	end
 	--------------------------------------------------------------------------------------------------------------
 	--create the fifthball
 	local function fifthBall()
 		-- creating second ball
 		local ball5 = display.newImage("Images/super_ball.png", 0, 0)
+
 		--add to physics
-		physics.addBody(ball5, {density=1, friction=0.6, bounce=0.5, radius=250})
-		ball5:scale(6, 6)
+		physics.addBody(ball5, {density=1,0, friction=0.8, bounce=0.7, radius=200})
+
+		ball5:scale(8, 8)
 	end
 
 	---------------------------------------------------------------
