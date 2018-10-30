@@ -48,7 +48,7 @@ beam.width = display.contentWidth/2
 beam.height = display.contentHeight*1/10
 
 --rotate the beam -60 degrees so its on an angle
-beam:rotate(45)
+beam:rotate(40)
 
 --send it to the back layer
 beam:toBack()
@@ -113,19 +113,19 @@ end
 local function thirdBall()
 	-- creating third
 	local ball3 = display.newImage("Images/super_ball.png",0, 0)
-	ball3:scale(3, 3)
+	ball3:scale(4, 4)
 	--add to physics
-		physics.addBody(ball3, {density = 1.9, friction = 4.5, bounce = 1.0, radius = 60})
+		physics.addBody(ball3, {density = 1.9, friction = 4.5, bounce = 1.0, radius = 100})
 end
 
 --create the fourth ball
 	local function fourthBall()
 		-- creating second ball
 		local ball4 = display.newImage("Images/super_ball.png", 0, 0)
-		ball4:scale(4, 4)
+		ball4:scale(2.5, 2.5)
 	
 		--add to physics
-		physics.addBody(ball4, {density = 1,0, friction = 0.8, bounce = 2.7, radius = 100})
+		physics.addBody(ball4, {density = 1,0, friction = 0.8, bounce = 2.7, radius = 55})
 	end
 	--------------------------------------------------------------------------------------------------------------
 	--create the fifthball
@@ -134,9 +134,9 @@ end
 		local ball5 = display.newImage("Images/super_ball.png", 0, 0)
 
 		--add to physics
-		physics.addBody(ball5, {density=1,0, friction=0.8, bounce=0.7, radius=200})
+		physics.addBody(ball5, {density = 1,0, friction = 0.8, bounce = 0.25, radius = 125})
 
-		ball5:scale(8, 8)
+		ball5:scale(5, 5)
 	end
 
 	---------------------------------------------------------------
