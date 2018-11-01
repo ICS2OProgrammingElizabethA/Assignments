@@ -27,6 +27,7 @@ local clockText
 local countDownTimer
 local gameOver
 local lives = 5
+local youWin
 
 
 --create other local variables 
@@ -38,10 +39,13 @@ local numericField
 
 local randomNumber1
 local randomNumber2
+local randomNumber3
+local randomNumber4
 local randomOperator
 local userAnswer
 local incorrectAnswer
 local correctAnswer
+local correctText
 
 local pointsTextObject
 local numberOfPoints = 0
@@ -51,16 +55,20 @@ local numberOfPoints = 0
 --------------------------------------------------------
 
 --Correct sound
-local correctSound = audio.loadSound("Sounds/correctSound.mp3")
+local correctSound = audio.loadSound("Sounds/correct.mp3")
 local correctSoundChannel
 
 --Buddy sound
-local buddySound = audio.loadSound("Sounds/buddysound.mp3")
-local buddySoundChannel
+local sunnySound = audio.loadSound("Sounds/sunny.mp3")
+local sunnySoundChannel
 
 --Incorrect Sound
-local wrongSound = audio.loadSound("Sounds/wrongSound.mp3")
-local wrongSoundChannel
+local incorrectSound = audio.loadSound("Sounds/incorrect.mp3")
+local incorrectSoundChannel
+
+--Incorrect Sound
+local youWinSound = audio.loadSound("Sounds/youwinn.mp3")
+local youWinSoundChannel
 
 
 --------------------------------------------------------
@@ -68,60 +76,54 @@ local wrongSoundChannel
 --------------------------------------------------------
 
 local function UpdateHearts()
-	if (lives == 5) then
-   			heart1.isVisible = true
-   			heart2.isVisible = true
-   			heart3.isVisible = true
-   			heart4.isVisible = true
-   			heart5.isVisible = true
-
-
-   		elseif (lives == 4) then
-   			heart1.isVisible = true
-   			heart2.isVisible = true
-   			heart3.isVisible = true
-   			heart4.isVisible = true
-   			heart5.isVisible = false
-
 		
-   		elseif (lives == 3) then
-   			heart1.isVisible = true
+   	if (lives == 3) then
+   		    heart1.isVisible = true
    			heart2.isVisible = true
    			heart3.isVisible = true
-   			heart4.isVisible = false
-   			heart5.isVisible = false
 
-
-   		elseif (lives == 2) then
-   			heart1.isVisible = true
+   	elseif (lives == 2) then
+   		    heart1.isVisible = true
    			heart2.isVisible = true
    			heart3.isVisible = false
-   			heart4.isVisible = false
-   			heart5.isVisible = false
 
-   		elseif (lives == 1) then
+   	elseif (lives == 1) then
    			heart1.isVisible = true
    			heart2.isVisible = false
    			heart3.isVisible = false
-   			heart4.isVisible = false
-   			heart5.isVisible = false
 
-
-
-   		elseif (lives == 0) then
+   	elseif (lives == 0) then
    			heart1.isVisible = false
    			heart2.isVisible = false
    			heart3.isVisible = false
-   			heart4.isVisible = false
-   			heart5.isVisible = false
+
+   			timerText.isVisible = false
+   			incorrectObject.isVisible = false
 
    			gameOver.isVisible = true
-   			buddySoundChannel = audio.play(buddySound)
+   			sunnySoundChannel = audio.play(sunnySound)
 
    			numericField.isVisible = false
    			pointsTextObject.isVisible = false
    			questionObject.isVisible = false
    		end
+end
+
+local function CheckPoints( )
+		-- monitor points till they reach 5
+	if (numberOfPoints == 5) then
+		-- display the you win screen
+		youWin.isVisible = true
+
+		--make the the unneeded objets invisible
+		questionObject.isVisible = false
+		timerText.isVisible = false
+		pointsTextObject.isVisible = false
+		numericField.isVisible = false
+
+		--play you win sound
+		youWinSoundChannel = audio.play(youWinSound)
+	end
 end
 
 local function UpdateTime()
@@ -157,9 +159,11 @@ end
 -- local functions 
 local function AskQuestion()
 	--generate 2 random numbers between a max. and a min. number
-	randomOperator = math.random(1,3)
+	randomOperator = math.random(1,4)
 	randomNumber1 = math.random(1,10)
 	randomNumber2 = math.random(1,10)
+	randomNumber3 = math.random(1,50)
+	randomNumber4 = math.random(1,100)
 
  
  	if (randomOperator == 1) then
@@ -174,11 +178,19 @@ local function AskQuestion()
 		--create question in text object
 		questionObject.text = randomNumber1 .. " - " .. randomNumber2 .. " = "
 
+	elseif (randomNumber1 < randomNumber2) then
+		questionObject.text = randomNumber2 .. " - " .. randomNumber1 .. " = "
+		correctAnswer =  randomNumber2 .. " - " .. randomNumber1
+
 	elseif (randomOperator == 3) then
 	 	correctAnswer = randomNumber1 * randomNumber2
 
 		--create question in text object
 		questionObject.text = randomNumber1 .. " * " .. randomNumber2 .. " = "
+
+	elseif (randomOperator == 4) then
+		correctAnswer = randomNumber3 / randomNumber1
+		questionObject.text = randomNumber3 .. " / " .. randomNumber1 .. " = "
 	end	
 
 end
@@ -208,8 +220,8 @@ local function NumericFieldListener( event )
 
 
 		--if the user's answer and the correct answer and the correct answer are the same:
-		if (userAnswer == correctAnswer) then
-
+	if (userAnswer == correctAnswer) then
+            secondsLeft = totalSeconds
 			correctObject.isVisible = true 
 			correctSoundChannel = audio.play(correctSound)
 			timer.performWithDelay(2000, HideCorrect)
@@ -217,13 +229,18 @@ local function NumericFieldListener( event )
 
         -- create increasing points in the text object
 			pointsTextObject.text = "Points = ".. numberOfPoints
-
-		else
+			CheckPoints( )
+	else
 			incorrectObject.isVisible = true
-			wrongSoundChannel = audio.play(wrongSound)
+
+			--tell the user the corect answer
+			incorrectObject.text = ("Incorrect! The correct answer is " .. correctAnswer)
+
+			secondsLeft = totalSeconds
+			incorrectSoundChannel = audio.play(incorrectSound)
 			lives = lives - 1
 			UpdateHearts()
-			timer.performWithDelay(2000, HideIncorrect)			
+			timer.performWithDelay(2000, HideIncorrect) 			
 		end
 		event.target.text = "" 
 	end
@@ -234,34 +251,34 @@ end
 ------------------------------------------------------------
 
 --create the lives to display on the screen
-heart1 = display.newImageRect("Images/heart.png", 100,100)
+heart1 = display.newImageRect("Images/heart.png", 200,100)
 heart1.x = display.contentWidth * 7 / 8
 heart1.y = display.contentHeight * 1 / 7
 
-heart2 = display.newImageRect("Images/heart.png", 100, 100)
+heart2 = display.newImageRect("Images/heart.png", 200, 100)
 heart2.x = display.contentWidth * 6 / 8
 heart2.y = display.contentHeight * 1 / 7
 
-heart3 = display.newImageRect("Images/heart.png", 100, 100)
+heart3 = display.newImageRect("Images/heart.png", 200, 100)
 heart3.x = display.contentWidth * 5 / 8
 heart3.y = display.contentHeight * 1 / 7
-
-heart4 = display.newImageRect("Images/heart.png", 100, 100)
-heart4.x = display.contentWidth * 4 / 8
-heart4.y = display.contentHeight * 1 / 7
-
-heart5 = display.newImageRect("Images/heart.png", 100, 100)
-heart5.x = display.contentWidth * 3 / 8
-heart5.y = display.contentHeight * 1 / 7
 
 
 clockText = display.newText(secondsLeft, 750, 650, native.systemFontBold, 70)
 clockText:setFillColor( 44/255, 34/255, 186/255 )
 
-gameOver = display.newImageRect("Images/gameOver.png", display.contentWidth, display.contentHeight)
+--create gameOver image
+gameOver = display.newImageRect("Images/tenor.gif", display.contentWidth, display.contentHeight)
 gameOver.anchorX = 0
 gameOver.anchorY = 0
 gameOver.isVisible = false
+
+--create youwin image
+youWin = display.newImageRect("Images/youwin.png", display.contentWidth, display.contentHeight)
+youWin.anchorX = 0
+youWin.anchorY = 0
+youWin.isVisible = false
+
 
 -- create points box and make it visible
 pointsTextObject = display.newText( "Correct = ".. numberOfPoints, 800, 250, nil, 60 )
@@ -277,12 +294,18 @@ correctObject:setTextColor(1/255, 0/255, 29/255)
 correctObject.isVisible = false
 
 -- create the incorrect  text object and make it invisible
-incorrectObject = display.newText("Incorrect!", display.contentWidth/2, 250, nil, 50)
-incorrectObject:setTextColor(54/255, 204/255, 189/255)
+incorrectObject = display.newText("Incorrect!", 380, 200, nil, 45)
+incorrectObject:setTextColor(154/255, 244/255, 89/255)
 incorrectObject.isVisible = false
 
+--create timer text
 timerText = display.newText( "Time Left = ", 520, 650, native.systemFontBold, 70)
 timerText:setFillColor( 44/255, 34/255, 186/255 )
+
+--create "The correct answer is ..." text
+--correctText = display.newText("The correct answer is ".. correctAnswer, 800, 200, nil, 50)
+--correctText:setTextColor(189/255, 200/255, 129/255)
+--correctText.isVisible = true
 
 -----------------------------------------------------------
 -- CREATE THE NUMERIC FIELD 
