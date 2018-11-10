@@ -156,14 +156,16 @@ local function StartTime()
 end
 
 
--- local functions 
+-- More Local Functions 
+
 local function AskQuestion()
 	--generate 2 random numbers between a max. and a min. number
 	randomOperator = math.random(1,4)
 	randomNumber1 = math.random(1,10)
-	randomNumber2 = math.random(1,10)
+	randomNumber2 = math.random(1,20)
 	randomNumber3 = math.random(1,50)
 	randomNumber4 = math.random(1,100)
+	randomNumber5 = math.random(1, 10)
 
  
  	if (randomOperator == 1) then
@@ -173,24 +175,29 @@ local function AskQuestion()
 		questionObject.text = randomNumber1 .. " + " .. randomNumber2 .. " = "
 
 	elseif (randomOperator == 2) then
-	 	correctAnswer = randomNumber1 - randomNumber2
-
-		--create question in text object
-		questionObject.text = randomNumber1 .. " - " .. randomNumber2 .. " = "
-
-	elseif (randomNumber1 < randomNumber2) then
 		questionObject.text = randomNumber2 .. " - " .. randomNumber1 .. " = "
-		correctAnswer =  randomNumber2 .. " - " .. randomNumber1
+		if (randomNumber2 < randomNumber1) then
+			questionObject.text = randomNumber1 .. " - " .. randomNumber2 .. " = "
+	 	    correctAnswer = randomNumber1 - randomNumber2
+
+	 	elseif (randomNumber2 > randomNumber1) then
+	 		questionObject.text = randomNumber2 .. " - " .. randomNumber1 .. " = "
+	 	    correctAnswer = randomNumber2 - randomNumber1
+	 	end    
 
 	elseif (randomOperator == 3) then
-	 	correctAnswer = randomNumber1 * randomNumber2
+	 	correctAnswer = randomNumber1 * randomNumber5
 
 		--create question in text object
-		questionObject.text = randomNumber1 .. " * " .. randomNumber2 .. " = "
+		questionObject.text = randomNumber1 .. " * " .. randomNumber5 .. " = "
 
 	elseif (randomOperator == 4) then
-		correctAnswer = randomNumber3 / randomNumber1
-		questionObject.text = randomNumber3 .. " / " .. randomNumber1 .. " = "
+		correctAnswer = randomNumber5 / randomNumber4
+		correctAnswer = randomNumber5 * randomNumber4
+		temp = randomNumber5
+		randomNumber5 = correctAnswer
+		correctAnswer = temp
+		questionObject.text = randomNumber5 .. " / " .. randomNumber4 .. " = "
 	end	
 
 end
@@ -230,7 +237,7 @@ local function NumericFieldListener( event )
         -- create increasing points in the text object
 			pointsTextObject.text = "Points = ".. numberOfPoints
 			CheckPoints( )
-	else
+		else
 			incorrectObject.isVisible = true
 
 			--tell the user the corect answer
