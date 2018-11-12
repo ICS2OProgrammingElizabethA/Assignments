@@ -7,6 +7,10 @@
 -- hide the status bar
 display.setStatusBar(display.HiddenStatusBar)
 
+----SOUNDS
+local backgroundSound = audio.loadSound("Sounds/")
+local backgroundSoundChannel
+
 --global variables
 local scrollSpeedBanana = 3
 
@@ -17,22 +21,40 @@ display.setDefault( "background", 195/255, 20/255, 165/255 )
 local banana = display.newImageRect("Images/CompanyLogoElizabeth@2x copy.png", 200, 400)
 
 --set the image to be transparent
-realCat.alpha = 1
+banana.alpha = 1
 
 --set the initial x and y position of banana
-realCat.x = 0
-realCat.y = display.contentHeight / 3
+banana.x = 300
+banana.y = 300
 
---Function: MoveRealcat
+if (banana.x == 1578 ) then
+	--add the scroll speed to the x value of the banana
+	banana.x = banana.x - scrollSpeedBanana
+	banana.y = banana.y - scrollSpeedBanana
+
+	--change the transparency of the banana every time it so fast that it fades out
+	banana.alpha = banana.alpha - 0.01
+
+elseif (banana.x == 300) then
+	--add the scroll speed to the x-value of the banana
+	banana.x = banana.x + scrollSpeedBanana
+	--banana.y = banana.y - scrollSpeedBanana
+
+	--change the transparency of the banana every time it so fast that it fades out
+	banana.alpha = banana.alpha + 0.01
+end
+
+--Function: MoveBanana
 --Input: this function accepts an event listener
 --Output: none
---Description: This function adds the scroll speed to the x-value of the ship
+--Description: This function adds the scroll speed to the x-value of the banana
 local function MoveBanana(event)
-	--add the scroll speed to the x-value of the ship
-	realCat.x = realCat.x + scrollSpeedCat
+	--add the scroll speed to the x-value of the banana
+	banana.x = banana.x + scrollSpeedBanana
+	--banana.y = banana.y - scrollSpeedBanana
 
-	--change the transparency of the ship every time it so fast that it fades out
-	realCat.alpha = realCat.alpha - 0.000002/2
+	--change the transparency of the banana every time it so fast that it fades out
+	banana.alpha = banana.alpha + 0.01
 end
 
 --MoveRealCat,MoveDog and MoveRocket will be called over and over again
