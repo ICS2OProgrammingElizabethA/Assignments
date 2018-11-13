@@ -330,3 +330,27 @@ numericField:addEventListener( "userInput", NumericFieldListener)
 -- call the function to ask the Question
 AskQuestion()
 StartTime()
+
+
+
+
+
+
+
+------CompanyLogoLiz
+if (banana.x == 1578 ) then
+	--add the scroll speed to the x value of the banana
+	banana.x = banana.x - scrollSpeedBanana
+	banana.y = banana.y - scrollSpeedBanana
+
+	--change the transparency of the banana every time it so fast that it fades out
+	banana.alpha = banana.alpha - 0.01
+
+elseif (banana.x == 300) then
+	--add the scroll speed to the x-value of the banana
+	banana.x = banana.x + scrollSpeedBanana
+	--banana.y = banana.y - scrollSpeedBanana
+
+	--change the transparency of the banana every time it so fast that it fades out
+	banana.alpha = banana.alpha + 0.01
+end
