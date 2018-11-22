@@ -332,11 +332,6 @@ AskQuestion()
 StartTime()
 
 
-
-
-
-
-
 ------CompanyLogoLiz
 if (banana.x == 1578 ) then
 	--add the scroll speed to the x value of the banana
